@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}물류 정보 | 모블 컬리{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/operations.css') }}">{% endblock %}
+{% block content %}
+<div class="container operations-page">
+  <nav class="ops-nav" aria-label="주문 및 물류 메뉴">
+    <a href="{{ url_for('index') }}">상품 구매</a>
+    <a href="{{ url_for('lookup') }}">개별 주문조회</a>
+    <a href="{{ url_for('orders') }}">주문 현황</a>
+    <a href="{{ url_for('inquiry') }}" aria-current="page">물류 정보</a>
+  </nav>
+  <header class="ops-intro">
+    <span class="eyebrow">LOGISTICS OVERVIEW</span>
+    <h1>물류 정보</h1>
+    <p>상품 재고, 출고 작업과 분류 결과를 확인하세요.</p>
+  </header>
+
+  {% if error %}<div class="ops-alert" role="alert"><strong>물류 정보를 확인할 수 없습니다.</strong><p>{{ error }}</p></div>{% endif %}
+
+  <section class="ops-panel" aria-labelledby="inventory-title">
+    <div class="ops-panel-head"><div><h2 id="inventory-title">상품 및 재고</h2><p>현재 재고가 최소 재고 이하인 상품은 재고 부족으로 표시합니다.</p></div><span class="ops-count">전체 상품{% if not error %} <i aria-hidden="true">·</i> {{ products|length }}종{% endif %}</span></div>
+    <div class="ops-table-wrap" role="region" aria-label="상품 재고 표, 화면이 좁으면 좌우로 스크롤하세요" tabindex="0">
+      <table class="ops-table ops-inventory-table">
+        <caption class="sr-only">상품번호, 상품명, 색상, 판매가격, 현재 및 최소 재고, 재고 상태</caption>
+        <thead><tr><th scope="col">상품번호</th><th scope="col">상품명</th><th scope="col">색상</th><th scope="col" class="ops-number">판매가격</th><th scope="col" class="ops-number">현재 재고</th><th scope="col" class="ops-number">최소 재고</th><th scope="col">재고 상태</th></tr></thead>
+        <tbody>
+          {% for product in products %}
+          <tr><td class="ops-id">{{ product.product_id }}</td><th scope="row" class="ops-product-name">{{ product.name }}</th><td><span class="ops-color"><i class="ops-color-dot color-dot-{{ (product.color or 'neutral')|lower }}" aria-hidden="true"></i>{{ product.color or '-' }}</span></td><td class="ops-number ops-price">{{ product.price|won }}</td><td class="ops-number">{{ product.stock }}개</td><td class="ops-number">{{ product.min_stock }}개</td><td>{% if product.stock <= product.min_stock %}<span class="ops-state state-error">재고 부족</span>{% else %}<span class="ops-state state-completed">정상</span>{% endif %}</td></tr>
+          {% else %}<tr><td class="ops-empty" colspan="7"><strong>{% if error %}상품 재고를 불러오지 못했습니다.{% else %}상품 데이터가 없습니다.{% endif %}</strong></td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="ops-scroll-hint">표가 잘리면 좌우로 스크롤해 나머지 정보를 확인하세요.</p>
+  </section>
+
+  <section class="ops-panel" aria-labelledby="outbound-jobs-title">
+    <div class="ops-panel-head"><div><h2 id="outbound-jobs-title">출고 작업 조회</h2><p>가장 최근에 생성된 작업부터 표시합니다.</p></div><span class="ops-count">최근 100건</span></div>
+    <div class="ops-table-wrap" role="region" aria-label="최근 출고 작업 표, 화면이 좁으면 좌우로 스크롤하세요" tabindex="0">
+      <table class="ops-table ops-inquiry-jobs-table">
+        <caption class="sr-only">작업번호, 주문번호, 상품명, 출고 상태, 재시도 횟수, 생성일시</caption>
+        <thead><tr><th scope="col">작업번호</th><th scope="col">주문번호</th><th scope="col">상품명</th><th scope="col">상태</th><th scope="col" class="ops-number">재시도</th><th scope="col">생성일시</th></tr></thead>
+        <tbody>
+          {% for job in jobs %}<tr><th scope="row" class="ops-id">{{ job.job_id }}</th><td><a class="ops-order-link" href="{{ url_for('order_detail', order_id=job.order_id) }}">{{ display_order_number(job.order_id) }}</a></td><td class="ops-product-name">{{ job.product_name }}</td><td><span class="ops-state state-{{ job.status|lower }}">{{ job.status|status_ko }}</span></td><td class="ops-number">{{ job.retry_count }}회</td><td class="ops-date">{{ job.created_at|datetime_ko }}</td></tr>
+          {% else %}<tr><td class="ops-empty" colspan="6"><strong>{% if error %}출고 작업을 불러오지 못했습니다.{% else %}출고 작업이 없습니다.{% endif %}</strong></td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="ops-panel" aria-labelledby="outbound-logs-title">
+    <div class="ops-panel-head"><div><h2 id="outbound-logs-title">출고 및 분류 기록</h2><p>예상 상품과 인식 상품, 분류 결과를 함께 확인할 수 있습니다.</p></div><span class="ops-count">최근 100건</span></div>
+    <div class="ops-table-wrap" role="region" aria-label="출고 및 분류 기록 표, 화면이 좁으면 좌우로 스크롤하세요" tabindex="0">
+      <table class="ops-table ops-logs-table">
+        <caption class="sr-only">기록번호, 주문번호, 예상 및 인식 상품, 분류 결과, 목적지, 기록일시</caption>
+        <thead><tr><th scope="col">기록번호</th><th scope="col">주문번호</th><th scope="col">예상 상품</th><th scope="col">인식 상품</th><th scope="col">결과</th><th scope="col">분류 목적지</th><th scope="col">기록일시</th></tr></thead>
+        <tbody>
+          {% for entry in logs %}<tr><th scope="row" class="ops-id">{{ entry.log_id }}</th><td><a class="ops-order-link" href="{{ url_for('order_detail', order_id=entry.order_id) }}">{{ display_order_number(entry.order_id) }}</a></td><td class="ops-product-name">{{ entry.expected_name }}</td><td class="ops-product-name">{{ entry.detected_name or '-' }}</td><td><span class="ops-state state-{{ entry.result|lower }}">{{ entry.result|status_ko }}</span></td><td title="{{ entry.destination or '' }}">{{ entry.destination|status_ko }}</td><td class="ops-date">{{ entry.created_at|datetime_ko }}</td></tr>
+          {% else %}<tr><td class="ops-empty" colspan="7"><strong>{% if error %}분류 기록을 불러오지 못했습니다.{% else %}분류 기록이 없습니다.{% endif %}</strong><span>{% if not error %}상품 인식 및 출고 결과가 기록되면 여기에 표시됩니다.{% endif %}</span></td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="ops-scroll-hint">표가 잘리면 좌우로 스크롤해 나머지 정보를 확인하세요.</p>
+  </section>
+</div>
+{% endblock %}

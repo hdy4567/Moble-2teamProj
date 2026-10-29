@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}모블 컬리 | 오늘의 식탁을 채우는 네 가지 컬러{% endblock %}
+{% block content %}
+<section class="hero advertising-carousel" id="advertising-carousel" aria-label="모블 컬리 기획전" aria-roledescription="캐러셀">
+  <article class="advertising-slide" data-ad-slide aria-label="1 / 2, 오늘의 컬러 식탁" aria-roledescription="슬라이드">
+  <img class="hero-image" src="{{ url_for('static', filename='images/hero-produce.png') }}" alt="딸기, 블루베리, 노란 파프리카와 브로콜리로 차린 다채로운 식탁 연출" fetchpriority="high" width="2172" height="724">
+  <div class="container hero-inner"><div class="hero-copy"><span class="hero-label"><i></i> COLORS FOR YOUR TABLE</span><h1 id="hero-title">오늘의 식탁에,<br>네 가지 <em>컬러</em>를 더하다.</h1><p>과일부터 채소까지, 필요한 만큼 골라 담고<br>재고와 입고 기록도 함께 확인해 보세요.</p><a class="hero-link" href="#products">오늘의 상품 만나보기 {{ icon('arrow',18) }}</a></div></div>
+  </article>
+  <article class="advertising-slide" data-ad-slide aria-label="2 / 2, 나만의 한 상" aria-roledescription="슬라이드" hidden inert>
+    <img class="hero-image" src="{{ url_for('static', filename='images/hero-table.png') }}" alt="딸기와 블루베리로 차린 나만의 식탁 연출" loading="lazy" width="2172" height="724">
+    <div class="container hero-inner"><div class="hero-copy"><span class="hero-label"><i></i> YOUR TABLE, YOUR COLORS</span><h2>하나씩 골라 담아,<br><em>나만의 한 상.</em></h2><p>빨강과 파랑, 노랑과 초록.<br>좋아하는 컬러로 오늘의 식탁을 완성하세요.</p><a class="hero-link" href="#products">나만의 한 상 고르기 {{ icon('arrow',18) }}</a></div></div>
+  </article>
+  <div class="container advertising-controls"><div class="advertising-dots" role="group" aria-label="광고 선택"><button type="button" data-ad-dot="0" aria-label="오늘의 컬러 식탁 광고" aria-current="true" class="is-active"></button><button type="button" data-ad-dot="1" aria-label="나만의 한 상 광고" aria-current="false"></button></div><div class="advertising-navigation"><button type="button" data-ad-prev aria-label="이전 광고">{{ icon('chevron',17) }}</button><output data-ad-counter aria-label="현재 광고">01 / 02</output><button type="button" data-ad-next aria-label="다음 광고">{{ icon('chevron',17) }}</button><button type="button" data-ad-toggle aria-label="광고 자동 재생 일시정지" aria-pressed="false"><span aria-hidden="true">Ⅱ</span></button></div></div>
+  <span class="advertising-image-note">상품 연출 이미지</span>
+</section>
+<div class="service-strip container"><div>{{ icon('bag',21) }}<span><strong>가입 없이 간편하게</strong> 원하는 상품만 바로 주문</span></div><div>{{ icon('scan',21) }}<span><strong>한 번 더 꼼꼼하게</strong> AI 비전으로 상품 확인</span></div><div>{{ icon('box',21) }}<span><strong>주문번호 하나로</strong> 출고 현황까지 한눈에</span></div></div>
+
+<section class="color-discovery container" aria-labelledby="color-discovery-title">
+  <div class="discovery-heading"><div><span class="eyebrow">A COLORFUL LITTLE ROUTINE</span><h2 id="color-discovery-title">오늘은 어떤 컬러를 담을까요? <span aria-hidden="true">🌿</span></h2></div><p>내 식탁에 어울리는 컬러부터 가볍게.</p></div>
+  <div class="emoji-shortcuts" role="group" aria-label="컬러별 상품 바로가기">
+    {% for color, emoji, title, subtitle in [('all','🧺','모두 둘러보기','식탁을 채우는 컬러'),('red','🍓','레드 셀렉션','산뜻한 빨강 한 스푼'),('blue','🫐','블루 셀렉션','나를 위한 작은 여유'),('yellow','🌽','옐로 셀렉션','식탁을 환하게'),('green','🥦','그린 셀렉션','초록을 곁들이는 하루')] %}
+    <button type="button" class="emoji-shortcut{% if color == 'all' %} is-active{% endif %}" data-color-jump="{{ color }}" aria-pressed="{{ 'true' if color == 'all' else 'false' }}"><span class="shortcut-emoji" aria-hidden="true">{{ emoji }}</span><strong>{{ title }}</strong><small>{{ subtitle }}</small></button>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="shop-section container" id="products" aria-labelledby="products-title">
+  <div class="section-heading"><span class="eyebrow">CURATED BY MOBLE</span><h2 id="products-title"><span aria-hidden="true">🛒</span> 오늘의 식탁, 이렇게 채워 보세요.</h2><p>다채롭게 골라 담고, 구매 전 재고와 입고 기록까지 확인하세요.</p></div>
+  <div class="catalog-toolbar"><div class="filter-tabs" role="group" aria-label="상품 색상 필터"><button class="filter-tab is-active" type="button" data-color="all" aria-pressed="true">전체</button><button class="filter-tab" type="button" data-color="red" aria-pressed="false"><i class="swatch red"></i> 레드</button><button class="filter-tab" type="button" data-color="blue" aria-pressed="false"><i class="swatch blue"></i> 블루</button><button class="filter-tab" type="button" data-color="yellow" aria-pressed="false"><i class="swatch yellow"></i> 옐로</button><button class="filter-tab" type="button" data-color="green" aria-pressed="false"><i class="swatch green"></i> 그린</button></div><label class="sort-control"><span class="sr-only">상품 정렬</span><select id="product-sort" aria-label="상품 정렬"><option value="default">기본순</option><option value="price-low">낮은 가격순</option><option value="price-high">높은 가격순</option><option value="name">이름순</option></select>{{ icon('down',14) }}</label></div>
+  <p class="search-feedback" id="search-feedback" role="status" hidden></p>
+  <div class="catalog-sync-status" id="catalog-sync-status" role="status" hidden><span id="catalog-sync-message"></span><button type="button" id="retry-catalog">다시 확인</button></div>
+  <form action="{{ url_for('create_order') }}" method="post" id="order-form">
+    <div class="product-grid" id="product-grid">
+      {% include 'partials/product_cards.html' %}
+    </div>
+    <div class="empty-state" id="catalog-empty" {% if products %}hidden{% endif %}>{{ icon('box',40) }}<h3>새로운 상품을 준비하고 있어요</h3><p>곧 오늘의 식탁을 채울 상품으로 찾아뵙겠습니다.</p></div>
+    <div class="empty-state no-results" id="no-results" hidden>{{ icon('search',36) }}<h3>찾으시는 상품이 없어요</h3><p>다른 검색어나 컬러를 선택해 주세요.</p><button class="button secondary" type="button" id="reset-filters">전체 상품 보기</button></div>
+    <aside class="order-bar" id="order-summary" aria-label="선택한 상품 요약" {% if not products %}hidden{% endif %}><div class="order-bar-icon">{{ icon('bag',25) }}<span id="total-count">0</span></div><div class="summary-description"><strong>나의 장바구니</strong><span id="cart-description">마음에 드는 상품을 담아보세요</span></div><div class="summary-price"><span>{{ "회원 할인 적용가" if logged_in_member else "총 주문금액" }}</span><strong id="total-price" aria-live="polite">0원</strong>{% if logged_in_member %}<small class="member-price-detail"><s id="cart-original">0원</s> <em id="cart-savings">5% 할인 · −0원</em></small>{% endif %}</div><button type="submit" id="order-button" disabled>배송·결제하기 {{ icon('arrow',19) }}</button></aside>
+    <section class="inline-cart" id="inline-cart" aria-label="장바구니 상품별 수량 관리" hidden>
+      <div class="inline-cart-heading"><strong>담은 상품 관리</strong><span>수량을 조절하거나 상품을 삭제할 수 있어요.</span></div>
+      <div class="inline-cart-items" id="inline-cart-items"></div>
+    </section>
+    <button type="button" class="floating-cart" id="floating-cart" data-open-cart aria-controls="cart-drawer" aria-expanded="false"><span class="floating-cart-icon">{{ icon('bag',23) }}<b id="floating-cart-count">0</b></span><span class="floating-cart-copy"><strong>나의 장바구니</strong><span id="floating-cart-total">0원</span></span>{{ icon('chevron',15) }}</button>
+    <aside class="cart-drawer" id="cart-drawer" aria-labelledby="cart-drawer-title" aria-describedby="cart-drawer-note" hidden>
+      <header class="cart-drawer-heading"><div><span class="eyebrow">YOUR LITTLE COLLECTION</span><h2 id="cart-drawer-title">장바구니 <span id="cart-drawer-count">0</span></h2></div><button type="button" class="icon-button cart-drawer-close" data-cart-close aria-label="장바구니 닫기">{{ icon('close',23) }}</button></header>
+      <div class="cart-drawer-body">
+        <div class="cart-drawer-status" id="cart-drawer-status" role="status" hidden><p id="cart-drawer-message"></p><button type="button" id="cart-drawer-retry" hidden>다시 확인하기</button></div>
+        <div class="cart-drawer-empty" id="cart-drawer-empty"><span class="cart-empty-icon" aria-hidden="true">{{ icon('bag',36) }}</span><h3>아직 담은 상품이 없어요</h3><p>오늘 마음에 드는 상품을<br>하나씩 골라 담아보세요.</p><button type="button" class="button secondary" id="cart-continue" data-cart-close>상품 둘러보기 {{ icon('arrow',16) }}</button></div>
+    <section class="cart-edit-panel" id="cart-edit-panel" aria-label="장바구니 상품 관리" hidden>
+      <div class="cart-edit-heading"><strong>장바구니에 담은 상품</strong><button type="button" id="cart-clear" class="cart-clear-button">전체 비우기</button></div>
+      <div id="cart-edit-items" class="cart-edit-items" aria-live="polite"></div>
+      <p class="cart-edit-help">주문하기 전에는 상품을 자유롭게 삭제할 수 있어요.</p>
+    </section>
+      </div>
+      <footer class="cart-drawer-footer"><div class="cart-drawer-total"><span>{{ "회원 할인 결제금액" if logged_in_member else "상품 합계" }}</span><strong id="cart-drawer-total">0원</strong></div>{% if logged_in_member %}<p class="drawer-member-discount"><s id="drawer-original">0원</s> <strong id="drawer-savings">5% 할인 · −0원</strong></p>{% endif %}<p id="cart-drawer-note">회원 할인은 주문 시 확정됩니다. 최신 가격과 재고를 다시 확인합니다.</p><button type="button" class="button primary cart-checkout" id="cart-checkout" disabled><span>주문서로 이동</span>{{ icon('arrow',18) }}</button><button type="button" class="cart-keep-shopping" data-cart-close>쇼핑 계속하기</button></footer>
+    </aside>
+  </form>
+</section>
+
+<section class="collection-section container" id="collection"><div class="collection-copy"><span class="eyebrow">FOUR COLORS. YOUR TABLE.</span><h2>색다르게 골라 담는<br>오늘의 식탁.</h2><p>간식부터 한 끼의 곁들임까지.<br>나의 식탁에 필요한 컬러를 찾아보세요.</p><a href="#products">상품 고르러 가기 {{ icon('arrow',18) }}</a></div><div class="collection-art" aria-hidden="true"><span class="color-tile tile-red"><small>01</small>RED</span><span class="color-tile tile-blue"><small>02</small>BLUE</span><span class="color-tile tile-yellow"><small>03</small>YELLOW</span><span class="color-tile tile-green"><small>04</small>GREEN</span></div></section>
+
+<section class="guide-section" id="how-it-works"><div class="container"><div class="section-heading"><span class="eyebrow">A BETTER SHOPPING EXPERIENCE</span><h2>쉽게 주문하고, 편하게 확인하세요.</h2><p>처음부터 마지막까지, 모블 컬리가 함께합니다.</p></div><div class="guide-grid"><article><span class="guide-icon">{{ icon('bag',28) }}</span><span class="guide-step">STEP 01</span><h3>원하는 만큼 골라 담기</h3><p>회원가입 없이 상품과 수량을 선택하세요.<br>선택한 상품은 주문 전에 한 번 더 확인해요.</p></article><article><span class="guide-icon">{{ icon('scan',28) }}</span><span class="guide-step">STEP 02</span><h3>상품을 정확하게 확인</h3><p>자동 출고 과정에서 AI 비전으로<br>주문한 상품이 맞는지 꼼꼼하게 확인해요.</p></article><article><span class="guide-icon">{{ icon('box',28) }}</span><span class="guide-step">STEP 03</span><h3>주문번호로 간편 조회</h3><p>발급된 주문번호만 입력하면<br>상품별 출고 현황을 확인할 수 있어요.</p><a href="{{ url_for('lookup') }}">내 주문 확인하기 {{ icon('arrow',15) }}</a></article></div></div></section>
+
+<dialog class="store-dialog checkout-dialog" id="confirm-dialog" aria-labelledby="confirm-title">
+  <div class="dialog-heading"><div><span class="eyebrow">YOUR COLORFUL CHECKOUT</span><h2 id="confirm-title">주문서를 완성해 주세요</h2></div><button type="button" class="icon-button" data-close-dialog aria-label="주문 확인 닫기">{{ icon('close',23) }}</button></div>
+  <div id="confirm-items" class="confirm-items"></div>
+  {% include 'partials/checkout_demo.html' %}
+  {% if logged_in_member %}<div class="member-checkout-breakdown"><div><span>정상가 합계</span><s id="confirm-original">0원</s></div><div><span>회원 5% 할인</span><strong id="confirm-savings">−0원</strong></div><div><span>예상 적립금 (출고 완료 시 1%)</span><span id="confirm-points">0원</span></div></div>{% endif %}
+  {% if logged_in_member %}
+  <div class="member-points-payment" style="border:1px solid #d7e5ef;border-radius:12px;padding:16px;margin:14px 0;background:#f5faff">
+    <label for="points-to-use" style="display:block;font-weight:700;margin-bottom:8px">적립금 사용 <small style="font-weight:400">(보유 {{ '{:,}'.format(available_points) }}P)</small></label>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input type="number" id="points-to-use" name="points_to_use" form="order-form" value="0" min="0" max="{{ available_points }}" step="1" style="width:155px;padding:9px;border:1px solid #cbd5e1;border-radius:8px" aria-describedby="points-help">
+      <button type="button" id="points-use-all" class="button secondary">전액 사용</button>
+      <button type="button" id="points-cancel" class="button secondary" hidden>사용 취소</button>
+    </div>
+    <p id="points-help" style="margin:8px 0 0;font-size:13px;color:#526579">1P = 1원 · 할인 후 금액 이내 사용 · 사용한 적립금은 주문에 기록됩니다.</p>
+    <p style="margin:7px 0 0">적립금 차감: <strong id="confirm-points-used">0원</strong></p>
+  </div>
+  {% endif %}
+  <div class="confirm-total"><span>{{ '회원 할인 후 결제금액' if logged_in_member else '총 결제금액' }}</span><strong id="confirm-total"></strong></div><p class="catalog-sync-status" id="confirm-status" role="status" hidden></p><p class="checkout-charge-notice">현재 실제 청구 및 문자 발송은 이루어지지 않습니다. 진행하면 주문이 접수됩니다.</p><div class="page-actions"><button type="button" class="button secondary" data-close-dialog>계속 쇼핑하기</button><button type="button" class="button primary" id="confirm-order">결제하기 {{ icon('arrow',18) }}</button></div>
+</dialog>
+<dialog class="store-dialog product-dialog" id="product-dialog" aria-labelledby="product-dialog-title">
+  <button type="button" class="icon-button dialog-corner" data-close-dialog aria-label="상품 상세 닫기">{{ icon('close',23) }}</button><div class="product-photo" id="detail-photo" role="img"></div>
+  <div class="product-dialog-copy"><span class="eyebrow">MOBLE SELECTION</span><h2 id="product-dialog-title"></h2><p id="detail-description"></p><strong id="detail-price"></strong>
+    <div class="detail-db-facts"><span>현재 판매 구성 <b id="detail-selling-unit"></b></span><small>상품명·가격은 DB의 현재 값입니다.</small></div>
+    <div id="detail-guide"></div>
+    <section class="logistics-panel" id="detail-logistics" aria-labelledby="detail-logistics-title">
+      <div class="logistics-panel-heading"><span class="logistics-heading-icon">{{ icon('box',18) }}</span><div><span class="eyebrow">INVENTORY NOTE</span><h3 id="detail-logistics-title">재고와 입고 기록</h3></div><span class="logistics-db-label">기록 기준</span></div>
+      <div data-logistics-content aria-live="polite" aria-atomic="true"></div>
+      <p class="logistics-disclaimer">최근 입고 기록 기준이며, 현재 재고 전체의 보관기간이나 소비기한을 뜻하지 않습니다.</p>
+    </section>
+    <p class="product-dialog-note">상품 이미지는 이해를 돕기 위한 연출 이미지입니다.<br>실제 상품과 포장은 이미지와 다를 수 있습니다.</p><div class="detail-purchase-action"><button type="button" class="button primary" id="detail-add">{{ icon('bag',18) }} 한 개 담기</button></div>
+  </div>
+</dialog>
+{% endblock %}
+

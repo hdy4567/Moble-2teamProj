@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}주문 상세 | 모블 컬리{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/operations.css') }}">{% endblock %}
+{% block content %}
+<div class="container operations-page">
+  <nav class="ops-nav" aria-label="주문 및 물류 메뉴">
+    <a href="{{ url_for('index') }}">상품 구매</a>
+    <a href="{{ url_for('lookup') }}">개별 주문조회</a>
+    <a href="{{ url_for('orders') }}" aria-current="page">주문 현황</a>
+    <a href="{{ url_for('inquiry') }}">물류 정보</a>
+  </nav>
+  <header class="ops-intro ops-detail-intro">
+    <div><a class="ops-back-link" href="{{ url_for('orders') }}"><span aria-hidden="true">←</span> 주문 목록으로</a><h1>주문 상세</h1><p>주문 상품부터 출고 작업까지, 진행 내역을 확인하세요.</p></div>
+    {% if order %}<div class="ops-order-identity"><span>주문번호</span><strong>{{ display_order_number(order.order_id) }}</strong></div>{% endif %}
+  </header>
+
+  {% if error %}<div class="ops-alert" role="alert"><strong>주문 상세를 확인할 수 없습니다.</strong><p>{{ error }}</p></div>{% endif %}
+
+  {% if order %}
+  {% include 'partials/demo_receipt.html' %}
+  <section class="ops-summary" aria-label="주문 기본 정보">
+    <div><span>주문 상태</span><strong class="ops-state state-{{ order.status|lower }}">{{ order.status|status_ko }}</strong></div>
+    <div><span>주문일시</span><strong>{{ order.ordered_at|datetime_ko }}</strong></div>
+    <div><span>승인일시</span><strong>{{ order.approved_at|datetime_ko }}</strong></div>
+    <div><span>완료일시</span><strong>{{ order.completed_at|datetime_ko }}</strong></div>
+  </section>
+
+  <section class="ops-panel" aria-labelledby="order-items-title">
+    <div class="ops-panel-head"><div><h2 id="order-items-title">주문 상품</h2><p>주문 당시 가격과 현재까지 확인된 출고 수량입니다.</p></div><span class="ops-count">{{ items|length }}종</span></div>
+    <div class="ops-table-wrap" role="region" aria-label="주문 상품 표, 화면이 좁으면 좌우로 스크롤하세요" tabindex="0">
+      <table class="ops-table ops-items-table">
+        <caption class="sr-only">주문 항목번호, 상품명, 색상, 주문 및 출고 수량, 주문 당시 단가</caption>
+        <thead><tr><th scope="col">항목번호</th><th scope="col">상품명</th><th scope="col">색상</th><th scope="col" class="ops-number">주문수량</th><th scope="col" class="ops-number">출고수량</th><th scope="col" class="ops-number">주문 시 단가</th></tr></thead>
+        <tbody>
+          {% for item in items %}
+          <tr><td class="ops-id">{{ item.item_id }}</td><th scope="row" class="ops-product-name">{{ item.product_name or item.name }}</th><td><span class="ops-color"><i class="ops-color-dot color-dot-{{ (item.color or 'neutral')|lower }}" aria-hidden="true"></i>{{ item.color or '-' }}</span></td><td class="ops-number">{{ item.quantity }}개</td><td class="ops-number">{{ item.shipped_qty or 0 }}개</td><td class="ops-number ops-price">{{ item.unit_price|won }}</td></tr>
+          {% else %}<tr><td class="ops-empty" colspan="6"><strong>상품 정보가 없습니다.</strong></td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="ops-total"><span>총 주문금액</span><strong>{{ order.total|won }}</strong></div>
+  </section>
+
+  <section class="ops-panel" aria-labelledby="detail-jobs-title">
+    <div class="ops-panel-head"><div><h2 id="detail-jobs-title">출고 작업</h2><p>상품별 작업 상태와 재시도 이력을 확인할 수 있습니다.</p></div><span class="ops-count">{{ jobs|length }}건</span></div>
+    <div class="ops-table-wrap" role="region" aria-label="출고 작업 표, 화면이 좁으면 좌우로 스크롤하세요" tabindex="0">
+      <table class="ops-table ops-jobs-table">
+        <caption class="sr-only">출고 작업번호, 주문 항목번호, 상품명, 상태, 재시도 횟수, 생성 및 시작·완료일시</caption>
+        <thead><tr><th scope="col">작업번호</th><th scope="col">항목번호</th><th scope="col">상품명</th><th scope="col">상태</th><th scope="col" class="ops-number">재시도</th><th scope="col">생성일시</th><th scope="col">시작일시</th><th scope="col">완료일시</th></tr></thead>
+        <tbody>
+          {% for job in jobs %}<tr><th scope="row" class="ops-id">{{ job.job_id }}</th><td class="ops-id">{{ job.item_id }}</td><td class="ops-product-name">{{ job.product_name|default('-') }}</td><td><span class="ops-state state-{{ job.status|lower }}">{{ job.status|status_ko }}</span></td><td class="ops-number">{{ job.retry_count }}회</td><td class="ops-date">{{ job.created_at|datetime_ko }}</td><td class="ops-date">{{ job.started_at|datetime_ko }}</td><td class="ops-date">{{ job.completed_at|datetime_ko }}</td></tr>
+          {% else %}<tr><td class="ops-empty" colspan="8"><strong>출고 작업 기록이 없습니다.</strong><span>작업이 생성되면 이곳에서 확인할 수 있습니다.</span></td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="ops-scroll-hint">표가 잘리면 좌우로 스크롤해 나머지 정보를 확인하세요.</p>
+  </section>
+  {% elif not error %}
+  <div class="ops-panel ops-empty"><strong>해당 주문을 찾을 수 없습니다.</strong><span>주문번호를 확인한 뒤 다시 조회해 주세요.</span><a class="button secondary" href="{{ url_for('orders') }}">주문 목록 보기</a></div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}잠시 연결이 원활하지 않아요 | 모블 컬리{% endblock %}
+{% block content %}
+<section class="page-shell">
+  <div class="panel empty-state">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path d="M22 7 39 36H5L22 7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M22 17v9M22 31v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <h1>잠시 연결이 원활하지 않아요</h1>
+    <p>화면을 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.</p>
+    <a class="button primary" href="{{ url_for('index') }}">다시 시도하기</a>
+  </div>
+</section>
+{% endblock %}
+

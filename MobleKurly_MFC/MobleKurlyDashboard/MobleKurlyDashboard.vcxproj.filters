@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{05E32253-87A0-4ACD-930E-BD310DD357D7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{81885917-30CE-4E03-873C-FB0CD38B8963}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MobleKurlyApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DashboardFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Database.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PiTcpClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgInventory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClInclude Include="DashboardLayout.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="DashboardFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DashboardData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Database.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PiTcpClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgInventory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config.example.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ConveyorProtocol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup><ClCompile Include="LoginDialog.cpp" /><ClCompile Include="UiFont.cpp" /><ClCompile Include="ThemedMessageBox.cpp" /><ClInclude Include="LoginDialog.h" /><ClInclude Include="UiFont.h" /><ClInclude Include="ThemedMessageBox.h" /></ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ErrorBin.cpp"><Filter>Source Files</Filter></ClCompile>
+    <ClCompile Include="ErrorHistoryDialog.cpp"><Filter>Source Files</Filter></ClCompile>
+    <ClInclude Include="ErrorBinSql.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="ErrorHistoryDialog.h"><Filter>Header Files</Filter></ClInclude>
+  </ItemGroup>
+</Project>

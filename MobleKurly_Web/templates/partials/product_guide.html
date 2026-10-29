@@ -1,0 +1,17 @@
+{% set guide = product_guide(product) %}
+<section class="product-guide" aria-label="상품 보관과 손질 안내">
+  <div class="product-guide-heading"><span class="eyebrow">FOR YOUR TABLE</span><span class="guide-editorial-label">일반 상품 안내</span></div>
+  {% if guide %}
+  <h3>식탁에 더하는 작은 팁</h3>
+  <p class="guide-summary">{{ guide.summary }}</p>
+  <dl class="guide-tips">
+    {% for label, emoji, text in [('보관 방법','🧊',guide.storage),('손질·세척','💧',guide.preparation),('식탁 아이디어','🍽️',guide.serving)] %}
+    <div><dt><span aria-hidden="true">{{ emoji }}</span>{{ label }}</dt><dd>{{ text }}</dd></div>
+    {% endfor %}
+  </dl>
+  <details class="guide-reference"><summary>안내 기준과 참고 자료</summary><p>일반적인 식재료 안내이며 해당 상품의 실제 보관 이력·신선도·소비기한을 보증하지 않습니다. 상품 포장의 보관·섭취 표시를 우선 확인해 주세요. 조리 아이디어는 활용 예시입니다.</p><ul>{% for label, href in guide.sources %}<li><a href="{{ href }}" target="_blank" rel="noopener noreferrer">{{ label }} <span aria-hidden="true">↗</span></a></li>{% endfor %}</ul><p>세척은 조리·섭취 직전에 흐르는 물로 하고, 비누·주방세제는 사용하지 마세요. 잘라 둔 과일·채소는 냉장 보관해 주세요.</p></details>
+  {% else %}
+  <h3>상품 안내 준비 중</h3><p class="guide-summary">해당 상품에 맞는 보관·손질 안내를 준비 중입니다. 상품 포장의 표시사항을 확인해 주세요.</p>
+  {% endif %}
+  <p class="guide-source-note">상품명·판매 구성·가격·재고는 DB 기준입니다. 산지·품종·소비기한은 확인되지 않아 임의로 표시하지 않습니다.</p>
+</section>

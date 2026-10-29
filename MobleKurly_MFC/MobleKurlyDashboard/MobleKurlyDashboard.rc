@@ -1,0 +1,4 @@
+#include "resource.h"
+
+// Existing administrator artwork, containing 16..256px icon frames.
+IDI_MOBLE_ADMIN ICON "admin.ico"

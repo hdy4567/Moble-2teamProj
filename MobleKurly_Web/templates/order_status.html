@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}주문 현황 | 모블 컬리{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/operations.css') }}">{% endblock %}
+{% block content %}
+<div class="container operations-page">
+  <nav class="ops-nav" aria-label="주문 및 물류 메뉴">
+    <a href="{{ url_for('index') }}">상품 구매</a>
+    <a href="{{ url_for('lookup') }}">개별 주문조회</a>
+    <a href="{{ url_for('orders') }}" aria-current="page">주문 현황</a>
+    <a href="{{ url_for('inquiry') }}">물류 정보</a>
+  </nav>
+  <header class="ops-intro">
+    <span class="eyebrow">ORDER OVERVIEW</span>
+    <h1>주문 현황</h1>
+    <p>접수된 주문과 상품별 출고 수량을 한눈에 확인하세요.</p>
+  </header>
+
+  <form class="ops-search" method="get" action="{{ url_for('orders') }}" role="search" aria-label="주문번호 검색">
+    <div class="ops-search-field">
+      <label for="orders-search">주문번호</label>
+      <input class="text-input" id="orders-search" type="search" name="order_id" value="{{ search }}" placeholder="예: MK-000001 또는 1" autocomplete="off" aria-describedby="orders-search-help">
+      <span id="orders-search-help">주문번호를 비워 두면 최근 주문을 모두 확인할 수 있습니다.</span>
+    </div>
+    <div class="ops-search-actions">
+      <button class="button primary" type="submit">주문 검색</button>
+      <a class="button secondary" href="{{ url_for('orders') }}">전체 보기</a>
+    </div>
+  </form>
+
+  {% if error %}<div class="ops-alert" role="alert"><strong>주문을 확인할 수 없습니다.</strong><p>{{ error }}</p></div>{% endif %}
+
+  <section class="ops-panel" aria-labelledby="orders-title">
+    <div class="ops-panel-head">
+      <div><h2 id="orders-title">{% if search %}주문 검색 결과{% else %}최근 주문{% endif %}</h2><p>주문번호를 선택하면 상세 내역과 출고 작업을 확인할 수 있습니다.</p></div>
+      <span class="ops-count">{% if not error %}{{ orders|length }}건 <i aria-hidden="true">·</i> {% endif %}최대 200건</span>
+    </div>
+    <div class="ops-table-wrap" role="region" aria-label="주문 목록 표, 화면이 좁으면 좌우로 스크롤하세요" tabindex="0">
+      <table class="ops-table ops-orders-table">
+        <caption class="sr-only">주문번호, 주문일시, 진행 상태, 배송 권역, 상품 종류, 주문 및 출고 수량, 주문금액</caption>
+        <thead><tr><th scope="col">주문번호</th><th scope="col">주문일시</th><th scope="col">상태</th><th scope="col">배송 권역</th><th scope="col" class="ops-number">상품 종류</th><th scope="col" class="ops-number">주문수량</th><th scope="col" class="ops-number">출고수량</th><th scope="col" class="ops-number">주문금액</th><th scope="col">상세</th></tr></thead>
+        <tbody>
+          {% for entry in orders %}
+          <tr>
+            <th scope="row"><a class="ops-order-link" href="{{ url_for('order_detail', order_id=entry.order_id) }}">{{ display_order_number(entry.order_id) }}</a></th>
+            <td class="ops-date">{{ entry.ordered_at|datetime_ko }}</td>
+            <td><span class="ops-state state-{{ entry.status|lower }}">{{ entry.status|status_ko }}</span></td>
+            <td>{{ entry.delivery_region|default(none)|delivery_region_ko }}</td>
+            <td class="ops-number">{{ entry.item_types }}종</td>
+            <td class="ops-number">{{ entry.total_qty }}개</td>
+            <td class="ops-number">{{ entry.shipped_qty }}개</td>
+            <td class="ops-number ops-price">{{ entry.total_amount|won }}</td>
+            <td><a class="ops-detail-link" href="{{ url_for('order_detail', order_id=entry.order_id) }}" aria-label="{{ display_order_number(entry.order_id) }} 주문 상세 보기">보기 <span aria-hidden="true">→</span></a></td>
+          </tr>
+          {% else %}
+          <tr><td class="ops-empty" colspan="9"><strong>{% if error %}주문 목록을 불러오지 못했습니다.{% elif search %}일치하는 주문이 없습니다.{% else %}아직 접수된 주문이 없습니다.{% endif %}</strong><span>{% if error %}위 안내를 확인한 뒤 다시 조회해 주세요.{% elif search %}입력한 주문번호를 확인하거나 전체 보기를 눌러 주세요.{% else %}상품 구매 후 주문 내역이 여기에 표시됩니다.{% endif %}</span></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="ops-scroll-hint">표가 잘리면 좌우로 스크롤해 나머지 정보를 확인하세요.</p>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64"><Configuration>Debug</Configuration><Platform>x64</Platform></ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64"><Configuration>Release</Configuration><Platform>x64</Platform></ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>MFCProj</Keyword>
+    <ProjectGuid>{ABA6A85A-4E40-4F47-A499-2CB8DD3579C6}</ProjectGuid>
+    <RootNamespace>MobleKurlyDashboard</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType><UseDebugLibraries>true</UseDebugLibraries><PlatformToolset>v143</PlatformToolset><CharacterSet>Unicode</CharacterSet><UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType><UseDebugLibraries>false</UseDebugLibraries><PlatformToolset>v143</PlatformToolset><WholeProgramOptimization>true</WholeProgramOptimization><CharacterSet>Unicode</CharacterSet><UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile><WarningLevel>Level3</WarningLevel><SDLCheck>true</SDLCheck><PrecompiledHeader>NotUsing</PrecompiledHeader><ConformanceMode>true</ConformanceMode><LanguageStandard>stdcpp17</LanguageStandard><AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions><Optimization>Disabled</Optimization><PreprocessorDefinitions>_DEBUG;_WINDOWS;_AFXDLL;UNICODE;_UNICODE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions></ClCompile>
+    <Link><SubSystem>Windows</SubSystem><GenerateDebugInformation>true</GenerateDebugInformation><AdditionalDependencies>gdiplus.lib;odbc32.lib;Ws2_32.lib;winhttp.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies></Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile><WarningLevel>Level3</WarningLevel><SDLCheck>true</SDLCheck><PrecompiledHeader>NotUsing</PrecompiledHeader><ConformanceMode>true</ConformanceMode><LanguageStandard>stdcpp17</LanguageStandard><AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions><Optimization>MaxSpeed</Optimization><FunctionLevelLinking>true</FunctionLevelLinking><IntrinsicFunctions>true</IntrinsicFunctions><PreprocessorDefinitions>NDEBUG;_WINDOWS;_AFXDLL;UNICODE;_UNICODE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions></ClCompile>
+    <Link><SubSystem>Windows</SubSystem><EnableCOMDATFolding>true</EnableCOMDATFolding><OptimizeReferences>true</OptimizeReferences><AdditionalDependencies>gdiplus.lib;odbc32.lib;Ws2_32.lib;winhttp.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies></Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="MobleKurlyApp.cpp" />
+    <ClCompile Include="LoginDialog.cpp" />
+    <ClCompile Include="UiFont.cpp" />
+    <ClCompile Include="ThemedMessageBox.cpp" />
+    <ClCompile Include="DashboardFrame.cpp" />
+    <ClCompile Include="CctvReceiver.cpp" />
+    <ClCompile Include="SettlementIntegrated.cpp" />
+    <ClCompile Include="Database.cpp" />
+    <ClCompile Include="PiTcpClient.cpp" />
+    <ClCompile Include="DlgInventory.cpp" />
+    <ClCompile Include="ErrorBin.cpp" />
+    <ClCompile Include="ErrorHistoryDialog.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DashboardFrame.h" />
+    <ClInclude Include="DashboardLayout.h" />
+    <ClInclude Include="CctvReceiver.h" />
+    <ClInclude Include="MjpegBuffer.h" />
+    <ClInclude Include="LoginDialog.h" />
+    <ClInclude Include="UiFont.h" />
+    <ClInclude Include="ThemedMessageBox.h" />
+    <ClInclude Include="ConveyorProtocol.h" />
+    <ClInclude Include="DashboardData.h" />
+    <ClInclude Include="Database.h" />
+    <ClInclude Include="PiTcpClient.h" />
+    <ClInclude Include="DlgInventory.h" />
+    <ClInclude Include="ErrorBinSql.h" />
+    <ClInclude Include="ErrorHistoryDialog.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config.example.ini" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Target Name="CreateUserConfigIfMissing" AfterTargets="Build" Condition="!Exists('$(TargetDir)config.ini')">
+    <Copy SourceFiles="$(ProjectDir)config.example.ini" DestinationFiles="$(TargetDir)config.ini" />
+  </Target>
+  <Target Name="CopyLoginBrandImage" AfterTargets="Build" Condition="Exists('$(ProjectDir)ikon.png')">
+    <Copy SourceFiles="$(ProjectDir)ikon.png" DestinationFiles="$(TargetDir)ikon.png" SkipUnchangedFiles="true" />
+  </Target>
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

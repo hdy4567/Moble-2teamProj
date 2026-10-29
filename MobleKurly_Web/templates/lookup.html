@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}주문 조회 | 모블 컬리{% endblock %}
+{% block content %}
+<section class="page-shell">
+  <div class="page-intro">
+    <span class="eyebrow">MY ORDER</span>
+    <h1>주문 조회</h1>
+    <p>주문번호로 지금 어디까지 준비되었는지 확인해 보세요.</p>
+    <a class="lookup-operations-link" href="{{ url_for('orders') }}">전체 주문현황 보기 {{ icon('chevron',14) }}</a>
+  </div>
+
+  <div class="panel lookup-panel">
+    <form method="post" action="{{ url_for('lookup') }}" class="lookup-form">
+      <label for="order_number" class="field-label">주문번호</label>
+      <div class="lookup-fields">
+        <input class="text-input" id="order_number" name="order_number" value="{{ entered_number }}" placeholder="예: MK-000001 또는 1" maxlength="32" autocomplete="off" spellcheck="false" required aria-describedby="lookup-help{% if lookup_error %} lookup-error{% endif %}"{% if lookup_error %} aria-invalid="true"{% endif %}>
+        <button class="button primary" type="submit">조회하기</button>
+      </div>
+      <p id="lookup-help" class="field-help">MK-000001, 000001, 숫자 1만 입력해도 같은 주문을 찾을 수 있어요.</p>
+      {% if lookup_error %}
+      <p class="field-error" id="lookup-error" role="alert">{{ lookup_error }}</p>
+      {% endif %}
+    </form>
+  </div>
+
+  {% if order %}
+  <div class="lookup-result" aria-live="polite">
+    {% include "partials/order_detail.html" %}
+  </div>
+  {% elif searched and not lookup_error %}
+  <div class="panel empty-state" role="status">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="10" stroke="currentColor" stroke-width="1.8"/><path d="m25 25 9 9M13 17h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <h2>주문을 찾지 못했어요</h2>
+    <p>입력한 번호를 확인해 주세요.<br>주문 완료 화면의 주문번호를 그대로 입력하면 가장 정확해요.</p>
+  </div>
+  {% else %}
+  <div class="lookup-note">
+    <strong>주문번호는 주문 완료 화면에서 확인할 수 있어요.</strong>
+    <p>회원가입 없이 주문하고, 간편하게 준비 상태를 확인하세요.</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
+

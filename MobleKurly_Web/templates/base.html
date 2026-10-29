@@ -1,0 +1,60 @@
+{% from 'partials/icons.html' import icon %}
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0992f2">
+  <meta name="application-name" content="모블 컬리">
+  <meta name="apple-mobile-web-app-title" content="모블 컬리">
+  <meta name="description" content="오늘의 식탁을 채우는 네 가지 컬러, 모블 컬리. 상품과 입고 기록을 확인하고 간편하게 주문하세요.">
+  <title>{% block title %}모블 컬리{% endblock %}</title>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/moble-kurly-shortcut-v7.ico') }}">
+  <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='images/moble-kurly-shortcut-v7-192.png') }}">
+  <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='images/moble-kurly-shortcut-v7-512.png') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/moble-kurly-shortcut-v7-180.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest', v='20261022') }}">
+  <link rel="preload" href="{{ url_for('static', filename='fonts/PretendardVariable.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/storefront.css', v='brand-20261020-member-cart-20261021') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/shopping.css', v='member-cart-20261021') }}">
+  {% block extra_head %}{% endblock %}
+  <script src="{{ url_for('static', filename='js/shopping.js', v='checkout-member-20261021') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/cart-drawer.js', v='discount-visible-20261021') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/order.js', v='discount-visible-20261021') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/member-benefits.css') }}">
+<script>window.MOBLE_MEMBER_DISCOUNT = {{ 5 if logged_in_member else 0 }};</script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">본문 바로가기</a>
+  <div class="announcement" id="announcement">
+    <div class="container"><span>처음 만나는, 더 간편한 쇼핑</span><a href="{{ url_for('index') }}#how-it-works">회원·비회원 모두 편리하게 주문하세요 {{ icon('chevron',14) }}</a><button type="button" aria-label="안내 배너 닫기" id="dismiss-announcement">{{ icon('close',16) }}</button></div>
+  </div>
+  <header class="site-header">
+    <div class="utility-bar container"><span>일상에 기술을 더하다, 모블 컬리</span><div>{% if logged_in_member %}<a href="{{ url_for('member_mypage') }}">{{ logged_in_member }}님 · 마이페이지</a><i></i><form method="post" action="{{ url_for('member_logout') }}" style="display:inline"><input type="hidden" name="csrf_token" value="{{ member_csrf() }}"><button type="submit" style="background:none;border:0;cursor:pointer;color:inherit;font:inherit">로그아웃</button></form>{% else %}<a href="{{ url_for('member_login') }}">로그인</a><i></i><a href="{{ url_for('member_register') }}">회원가입</a>{% endif %}<i></i><a href="{{ url_for('lookup') }}">비회원 주문조회</a><i></i><a href="{{ url_for('orders') }}">주문현황</a><i></i><a href="{{ url_for('inquiry') }}">물류정보</a><i></i><a href="{{ url_for('index') }}#how-it-works">이용안내</a></div></div>
+    <div class="header-main container">
+      <a class="brand" href="{{ url_for('index') }}" aria-label="모블 컬리 홈"><img class="brand-wordmark" src="{{ url_for('static', filename='images/kurly-by-moble-wordmark-v6.png') }}" alt="Kurly by MOBLE · 모블 컬리" width="1781" height="883" fetchpriority="high" decoding="async"></a>
+      <form class="header-search" role="search" action="{{ url_for('index') }}#products">
+        <label class="sr-only" for="product-search">상품 검색</label><input id="product-search" type="search" name="q" placeholder="오늘 식탁에 무엇을 담을까요?" autocomplete="off" value="{{ request.args.get('q', '') }}"><button type="submit" aria-label="검색">{{ icon('search',23) }}</button>
+      </form>
+      <div class="header-actions"><a class="header-action" href="{{ url_for('lookup') }}" aria-label="주문 조회">{{ icon('box',26) }}<span>주문조회</span></a><a class="header-action bag-link" href="{{ url_for('index') }}?cart=open#products" aria-label="장바구니 열기" {% if request.endpoint == 'index' %}data-open-cart aria-controls="cart-drawer" aria-expanded="false"{% endif %}>{{ icon('bag',26) }}<span>장바구니</span><b class="cart-badge" data-cart-count hidden>0</b></a></div>
+    </div>
+    <nav class="main-nav" aria-label="주 메뉴"><div class="container nav-inner">
+      <details class="category-menu"><summary>{{ icon('menu',20) }} 전체 카테고리</summary><div class="category-dropdown"><a href="{{ url_for('index') }}#products">전체 상품 {{ icon('chevron',14) }}</a><a href="{{ url_for('index') }}?color=red#products"><i class="swatch red"></i> RED · 빨강</a><a href="{{ url_for('index') }}?color=blue#products"><i class="swatch blue"></i> BLUE · 파랑</a><a href="{{ url_for('index') }}?color=yellow#products"><i class="swatch yellow"></i> YELLOW · 노랑</a><a href="{{ url_for('index') }}?color=green#products"><i class="swatch green"></i> GREEN · 초록</a></div></details>
+      <div class="nav-links"><a href="{{ url_for('index') }}#products" {% if request.endpoint == 'index' %}class="is-current"{% endif %}>추천상품</a><a href="{{ url_for('index') }}#collection">컬러 컬렉션 <span class="new-dot"></span></a><a href="{{ url_for('index') }}#how-it-works">쇼핑 가이드</a><a href="{{ url_for('lookup') }}" {% if request.endpoint == 'lookup' %}class="is-current"{% endif %}>주문조회</a></div>
+      <a class="nav-note" href="{{ url_for('index') }}#how-it-works"><span>간편주문</span> 이용안내 {{ icon('chevron',12) }}</a>
+    </div></nav>
+  </header>
+  <main id="main-content">
+    {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-wrap container" role="status">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="footer-main container"><div><a class="footer-logo" href="{{ url_for('index') }}" aria-label="모블 컬리 홈"><img class="brand-wordmark" src="{{ url_for('static', filename='images/kurly-by-moble-wordmark-v6.png') }}" alt="Kurly by MOBLE · 모블 컬리" width="1781" height="883" loading="lazy" decoding="async"></a><p>당신의 선택에, 기술의 정확함을 더합니다.</p></div><div class="footer-links"><a href="{{ url_for('index') }}#products">상품 둘러보기</a><a href="{{ url_for('lookup') }}">주문조회</a><a href="{{ url_for('orders') }}">주문현황</a><a href="{{ url_for('inquiry') }}">물류정보</a><a href="{{ url_for('index') }}#how-it-works">이용안내</a></div><div class="footer-guide"><strong>주문번호 하나로, 간편하게</strong><p>주문 완료 후 발급된 번호로<br>출고 현황을 확인하실 수 있습니다.</p></div></div>
+    <div class="footer-bottom container"><span>© MOBLE KURLY. All rights reserved.</span><span>컬러로 채우는 오늘의 식탁</span></div>
+  </footer>
+  <a class="back-top" href="#" aria-label="맨 위로">{{ icon('up',20) }}<span>TOP</span></a>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
+

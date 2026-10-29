@@ -1,0 +1,30 @@
+{
+  "host": "0.0.0.0",
+  "port": 5055,
+  "dry_run": false,
+  "arduino_port": "/dev/ttyACM0",
+  "arduino_baud": 115200,
+  "demo_auto_complete": true,
+  "demo_complete_seconds": 10,
+  "mysql": {
+    "host": "192.168.0.90",
+    "port": 3306,
+    "user": "moblekurly",
+    "password": "1111",
+    "database": "moblekurly"
+  },
+  "feeders_by_color": {
+    "RED": 1,
+    "BLUE": 1,
+    "YELLOW": 1,
+    "GREEN": 1
+  },
+  "video": {
+    "enabled": true,
+    "host": "0.0.0.0",
+    "port": 8080
+  },
+  "inspection": {
+    "camera_index": 0
+  } 
+}

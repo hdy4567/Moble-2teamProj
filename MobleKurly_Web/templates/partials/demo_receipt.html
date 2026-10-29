@@ -1,0 +1,6 @@
+{% set demo = demo_for_order(order.order_id) %}
+<section class="demo-receipt" aria-labelledby="demo-receipt-title">
+  <div class="demo-receipt-heading"><span aria-hidden="true">🧾</span><div><span class="eyebrow">YOUR ORDER</span><h2 id="demo-receipt-title">주문 선택 정보</h2></div><span class="demo-receipt-badge">{{ order.status|status_ko }}</span></div>
+  <dl><div><dt>배송 권역 · DB 기준</dt><dd>{{ order.delivery_region|default(none)|delivery_region_ko }}</dd></div>{% if demo %}<div><dt>선택한 결제 수단</dt><dd>{{ demo_methods.get(demo.method, '확인 필요') }}</dd></div>{% endif %}<div><dt>주문금액</dt><dd>{{ order.total|won }}</dd></div></dl>
+  <p>배송 권역은 주문 DB에 저장된 값입니다. 미등록 주문에는 권역을 임의로 채우지 않습니다. 실제 청구 및 문자 발송은 이루어지지 않았습니다. 이름·전화번호·배송 요청사항·문자 수신 선택은 저장하지 않습니다.{% if demo %} 결제 수단은 현재 브라우저에서만 표시하며 DB의 결제 이력이나 영수증이 아닙니다.{% endif %}</p>
+</section>

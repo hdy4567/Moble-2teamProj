@@ -1,0 +1,38 @@
+<ol class="checkout-progress" aria-label="주문 과정">
+  <li><span aria-hidden="true">🛒</span> 상품 확인</li><li><span aria-hidden="true">🚚</span> 배송 정보</li><li><span aria-hidden="true">💳</span> 결제</li>
+</ol>
+<fieldset class="checkout-choice-fields" id="checkout-choice-fields">
+  <legend class="sr-only">배송 정보와 결제 수단</legend>
+  <section class="checkout-block" aria-labelledby="delivery-title">
+    <div class="checkout-block-heading"><h3 id="delivery-title"><span aria-hidden="true">🚚</span> 배송 정보</h3><span>필수 정보를 확인해 주세요</span></div>
+    {% if delivery_profile %}<p class="member-checkout-note">✓ 회원 배송정보가 자동 입력됩니다. 주소를 바꾸려면 마이페이지에서 수정해 주세요.</p>{% endif %}
+    <div class="recipient-grid">
+      <div class="recipient-field"><label for="recipient-name">받는 분 이름 <span class="required-note">필수</span></label><input id="recipient-name" value="{{ delivery_profile.name if delivery_profile else '' }}" type="text" maxlength="40" required autocomplete="off" placeholder="받는 분 이름" aria-describedby="checkout-privacy-note"></div>
+      <div class="recipient-field"><label for="recipient-phone">휴대전화 번호 <span class="required-note">필수</span></label><input id="recipient-phone" value="{{ delivery_profile.phone if delivery_profile else '' }}" type="tel" inputmode="tel" maxlength="14" required autocomplete="off" placeholder="010-1234-5678" aria-describedby="checkout-privacy-note"></div>
+    </div>
+    {% if delivery_profile %}<div class="member-shipping-preview"><strong>저장된 배송지</strong><p>{{ delivery_profile.postal_code or '우편번호 미입력' }} · {{ delivery_profile.address or '기본 주소 미입력' }} {{ delivery_profile.address_detail or '' }}</p><a href="{{ url_for('member_mypage') }}">배송지 수정 →</a></div>{% endif %}
+    <label for="delivery-region">배송 권역 <span class="required-note">필수</span></label>
+    <div class="checkout-select"><select id="delivery-region" required aria-describedby="delivery-note"><option value="">배송 권역을 선택해 주세요</option>{% for code, label in demo_regions.items() %}<option value="{{ code }}">{{ label }}</option>{% endfor %}</select>{{ icon('down',16) }}</div>
+    <p id="delivery-region-feedback" class="checkout-region-feedback" role="status" hidden></p>
+    <p class="checkout-help" id="delivery-note">서울·경기도·충청도 중 선택해 주세요. 선택한 권역은 주문에 저장합니다. 상세 주소·배송비·도착 예정일은 등록하지 않습니다.</p>
+    <div class="recipient-field delivery-request-field"><label for="delivery-request">배송 요청사항 <span class="optional-note">선택</span></label><textarea id="delivery-request" rows="3" maxlength="200" autocomplete="off" placeholder="배송 시 요청하실 내용을 적어 주세요. 예: 도착 전 연락 부탁드립니다."></textarea><span id="delivery-request-count" class="request-count" aria-live="off">0 / 200</span></div>
+    <label class="sms-consent"><input type="checkbox" id="sms-consent"><span><strong>배송 관련 문자메시지 수신에 동의합니다.</strong><small>선택 사항이며 체크하지 않아도 주문할 수 있습니다. 광고성 문자 수신 동의가 아닙니다.</small></span><span class="optional-note">선택</span></label>
+    <p class="checkout-help checkout-privacy" id="checkout-privacy-note">이 창에서 입력한 이름·전화번호·요청사항·문자 수신 선택은 서버에 전송하거나 저장하지 않습니다. 회원 주문에는 별도로 마이페이지에 저장된 배송지가 DB에 기록됩니다. 받는 분을 바꾸려면 마이페이지에서 수정해 주세요.</p>
+    <div class="recipient-review" id="recipient-review" aria-label="입력한 배송 정보 확인" hidden><strong>입력 정보 확인</strong><p id="recipient-review-summary"></p><p id="recipient-review-request"></p><span id="recipient-review-sms"></span></div>
+  </section>
+  <section class="checkout-block" aria-labelledby="payment-title">
+    <div class="checkout-block-heading"><h3 id="payment-title"><span aria-hidden="true">💳</span> 결제 수단</h3><span>원하시는 수단을 선택해 주세요</span></div>
+    <div class="demo-payment-methods">
+      {% for code, label in demo_methods.items() %}<label class="demo-payment-option"><input type="radio" name="demo-method-choice" value="{{ code }}" {% if loop.first %}checked{% endif %}><span class="demo-method-emoji" aria-hidden="true">{{ {'card':'💳', 'wallet':'📱', 'transfer':'🏦'}[code] }}</span><strong>{{ label }}</strong></label>{% endfor %}
+    </div>
+  </section>
+  <label class="checkout-consent"><input type="checkbox" id="demo-consent" required><span>주문 상품과 입력한 내용을 확인했습니다. <span class="required-note">필수</span></span></label>
+</fieldset>
+<p class="checkout-payment-status" id="demo-payment-status" role="status" aria-live="polite" hidden></p>
+<p class="checkout-help">중복 접수를 방지하고 있어요. 주문 처리 중에는 잠시 기다려 주세요.</p>
+<input type="hidden" name="checkout_mode" value="demo_v1" form="order-form">
+<input type="hidden" name="order_request_token" value="{{ order_request_token }}" form="order-form">
+<input type="hidden" name="demo_csrf" value="{{ demo_csrf }}" form="order-form">
+<input type="hidden" name="delivery_region" id="checkout-region-value" value="" form="order-form">
+<input type="hidden" name="payment_method" id="checkout-method-value" value="card" form="order-form">
+<input type="hidden" name="demo_ack" id="checkout-ack-value" value="0" form="order-form">

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}주문 완료 | 모블 컬리{% endblock %}
+{% block content %}
+<section class="page-shell">
+  <div class="page-intro">
+    <div class="success-check" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="m6 14 5 5L22 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="eyebrow">THANK YOU FOR YOUR ORDER</span>
+    <h1>주문이 접수되었어요</h1>
+    <p>선택하신 상품을 차근차근 준비할게요.<br>주문번호를 저장해 두시면 언제든 준비 상태를 확인할 수 있어요.</p>
+  </div>
+  <div class="order-number-box">
+    <span>나의 주문번호</span>
+    <strong id="order-number">{{ display_order_number(order.order_id) }}</strong>
+    <button type="button" class="copy-button" data-copy="{{ display_order_number(order.order_id) }}" aria-label="주문번호 {{ display_order_number(order.order_id) }} 복사">복사하기</button>
+  </div>
+  {% include "partials/demo_receipt.html" %}
+  {% include "partials/order_detail.html" %}
+  <div class="page-actions">
+    <a class="button secondary" href="{{ url_for('index') }}">계속 쇼핑하기</a>
+    <a class="button primary" href="{{ url_for('lookup', order_number=display_order_number(order.order_id)) }}">주문 조회하기</a>
+  </div>
+</section>
+{% endblock %}
+
